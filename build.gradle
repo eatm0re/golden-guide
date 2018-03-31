@@ -1,0 +1,44 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.bmuschko:gradle-cargo-plugin:2.3'
+    }
+}
+
+group 'ru.tsystems.javaschool'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'war'
+apply plugin: 'com.bmuschko.cargo'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile group: 'org.springframework', name: 'spring-webmvc', version: '4.3.14.RELEASE'
+}
+
+cargo {
+    containerId = 'tomcat9x'
+    port = 9090
+
+    deployable {
+        context = 'golden-guide'
+    }
+
+    local {
+        homeDir = file(System.getenv().get("CATALINA_HOME"))
+        outputFile = file("build/output.log")
+
+        containerProperties {
+            property 'cargo.tomcat.ajp.port', 9099
+        }
+    }
+}
